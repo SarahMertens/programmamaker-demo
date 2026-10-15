@@ -1,0 +1,14 @@
+{
+  "name": "programmamaker",
+  "version": "1.0.0",
+  "description": "Maakt een tweemaandelijks programma uit ingestuurde Word-documenten en e-mails (demoversie met verzonnen gegevens).",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "npx --yes http-server -c-1 -p 8080 .",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

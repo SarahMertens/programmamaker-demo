@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="nl-BE">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Programmamaker (demo)</title>
+    <meta
+      name="description"
+      content="Demo: maak een tweemaandelijks programma uit ingestuurde Word-documenten en e-mails. Alle gegevens zijn verzonnen."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Atkinson+Hyperlegible+Mono:wght@400;600&display=swap"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="top">
+      <div class="brand">
+        <img id="logo" alt="Logo van de verzonnen Vriendenkring De Zeemeeuw" hidden />
+        <h1>Programmamaker<small>Demoversie · verzonnen gegevens</small></h1>
+      </div>
+      <div class="period">
+        <label for="periodBlock">Programma</label>
+        <select id="periodBlock"></select>
+        <input id="periodYear" type="number" min="2020" max="2100" aria-label="Jaar" />
+        <button class="btn primary" id="btnExport" type="button">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16" />
+          </svg>
+          Download Word
+        </button>
+      </div>
+    </header>
+
+    <div class="tabs" role="tablist">
+      <button class="btn" role="tab" id="tabList" aria-selected="true" type="button">Activiteiten</button>
+      <button class="btn" role="tab" id="tabPreview" aria-selected="false" type="button">Voorbeeld</button>
+    </div>
+
+    <main class="main" id="main" data-tab="list">
+      <section class="col-work">
+        <div class="intake" aria-labelledby="intakeTitle">
+          <div class="section-head">
+            <h2 id="intakeTitle">Iets binnengekregen?</h2>
+            <span class="hint">Word-bestand of e-mail</span>
+          </div>
+          <div class="demo-note" id="demoNote">
+            <strong>Dit is een demo.</strong> Klik op <b>Probeer met voorbeelden</b> om drie ingestuurde activiteiten in
+            te laden, of download de
+            <a href="voorbeelden/20261107_herfstwandeling.docx" download>Word-bestanden</a>
+            (<a href="voorbeelden/20261126_activiteiten-sofie-en-anne.docx" download>nog één</a>) en sleep ze zelf
+            hieronder. Alle namen en nummers zijn verzonnen.
+          </div>
+          <div class="drop" id="drop" tabindex="0" role="button" aria-describedby="dropHint">
+            <strong>Sleep Word-bestanden hierheen</strong>
+            <span id="dropHint">of klik om ze te kiezen. Meerdere tegelijk mag, ook een volledig vorig programma.</span>
+          </div>
+          <input type="file" id="fileInput" accept=".docx,.txt" multiple hidden />
+          <div class="intake-actions">
+            <button class="btn" id="btnPasteToggle" type="button" aria-expanded="false">
+              Tekst uit e-mail plakken
+            </button>
+            <button class="btn ghost" id="btnBlank" type="button">+ Lege activiteit</button>
+            <button class="btn primary" id="btnExamples" type="button">Probeer met voorbeelden</button>
+          </div>
+          <div class="paste" id="pasteBox" hidden>
+            <label for="pasteText" class="hint"
+              >Plak de tekst uit de e-mail. Begint een regel met bv. <b>Zaterdag 19/12:</b> en staan er regels met
+              <b>Afspraak:</b>, <b>Prijs:</b>, <b>Contactpersoon:</b> en <b>Opmerkingen:</b>, dan wordt alles vanzelf
+              ingevuld. Meerdere activiteiten in één e-mail kan ook.</label
+            >
+            <textarea
+              id="pasteText"
+              placeholder="Zaterdag 19/12: Kerstwandeling in Oostende&#10;Wij gaan de kerstlocaties bewonderen…&#10;Afspraak: 15 u in Brasserie Minigolf&#10;Prijs: je eigen consumptie&#10;Contactpersoon: Bart&#10;Opmerkingen: Bart verwittigen voor 18/12"
+            ></textarea>
+            <div class="intake-actions">
+              <button class="btn primary" id="btnPasteGo" type="button">Toevoegen aan programma</button>
+            </div>
+          </div>
+        </div>
+
+        <section class="list-section" aria-labelledby="listTitle">
+          <div class="section-head">
+            <h2 id="listTitle">In dit programma</h2>
+            <div class="summary" id="summary"></div>
+          </div>
+          <div class="list" id="list"></div>
+        </section>
+
+        <details class="settings" id="settings">
+          <summary>Sjabloon, opslaan en nieuw programma</summary>
+          <div class="settings-body">
+            <div class="settings-row">
+              <span class="eyebrow">Eerste pagina (sjabloon)</span>
+              <span class="hint"
+                >De eerste pagina, het logo en de opmaak komen uit een vorig programma. Is er iets veranderd (nieuw
+                telefoonnummer, ander lidgeld)? Pas het aan in Word in een vorig programma en kies dat bestand
+                hier.</span
+              >
+              <div class="intake-actions">
+                <span class="chip" id="tplName">–</span>
+                <button class="btn small" id="btnTpl" type="button">Ander sjabloon kiezen</button>
+                <button class="btn small ghost" id="btnTplReset" type="button">Standaard terugzetten</button>
+              </div>
+              <input type="file" id="tplInput" accept=".docx" hidden />
+            </div>
+            <div class="settings-row">
+              <span class="eyebrow">Werk bewaren</span>
+              <span class="hint"
+                >Je werk blijft automatisch bewaard in deze browser. Wil je verder werken op een andere computer of het
+                doorgeven aan iemand anders? Bewaar het als projectbestand.</span
+              >
+              <div class="intake-actions">
+                <button class="btn small" id="btnSave" type="button">Projectbestand bewaren</button>
+                <button class="btn small" id="btnOpen" type="button">Projectbestand openen</button>
+              </div>
+              <input type="file" id="projInput" accept=".json" hidden />
+            </div>
+            <div class="settings-row">
+              <span class="eyebrow">Volgend programma</span>
+              <span class="hint"
+                >Schuift door naar de volgende twee maanden. Activiteiten die vóór die periode vallen worden gewist;
+                aankondigingen voor later blijven staan.</span
+              >
+              <div class="intake-actions" id="nextWrap">
+                <button class="btn small" id="btnNext" type="button">Nieuw programma starten</button>
+              </div>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <section class="col-preview" aria-labelledby="pvTitle">
+        <div class="preview-bar">
+          <h2 id="pvTitle" class="eyebrow">Voorbeeld · zoals in Word</h2>
+          <span class="hint" id="pvInfo"></span>
+        </div>
+        <div class="preview-scroll" id="pvScroll"><div class="sheets" id="sheets"></div></div>
+      </section>
+    </main>
+    <div class="measure sheet" id="measure" aria-hidden="true"></div>
+    <div class="toast" id="toast" role="status" hidden></div>
+
+    <datalist id="contacts"></datalist>
+
+    <script src="vendor/jszip.min.js"></script>
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>
